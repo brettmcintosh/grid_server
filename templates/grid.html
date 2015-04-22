@@ -4,23 +4,22 @@
 <head>
     <link type="text/css" rel="stylesheet" href="/static/css/grid.css">
     <script src="/static/js/websocket.js"></script>
-    <script src="/static/js/drag.js"></script>
 </head>
 
 <body>
-    <div class="container">
-        <table id="grid">
-            {% for i in range(length) %}
-            <tr>
-                {% for j in range(length) %}
-                <td id="cell-{{ i }}-{{ j }}" draggable="true" ondragstart="drag(event)"
-                    ondragover="dragOver(event)" ondrop="drop(event)" ondragend="dragEnd(event)"></td>
-                {% end %}
-            </tr>
+<div class="container">
+    <table id="grid">
+        {% for i in range(length) %}
+        <tr>
+            {% for j in range(length) %}
+            <td id="cell-{{ i }}-{{ j }}" draggable="true"></td>
             {% end %}
-        </table>
-    </div>
-    <script src="/static/js/click.js"></script>
+        </tr>
+        {% end %}
+    </table>
+</div>
+<script src="/static/js/drag.js"></script>
+<script src="/static/js/click.js"></script>
 </body>
 
 </html>
