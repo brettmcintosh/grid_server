@@ -26,13 +26,12 @@ class GridManager(object):
     """
     grid_collection = {}
 
-    @classmethod
-    def get_or_create(cls, side):
-        if side in cls.grid_collection:
-            return cls.grid_collection[side]
+    def get_or_create(self, side):
+        if side in self.grid_collection:
+            return self.grid_collection[side]
         else:
             grid = Grid(side)
-            cls.grid_collection[side] = grid
+            self.grid_collection[side] = grid
             return grid
 
 
