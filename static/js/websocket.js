@@ -1,5 +1,6 @@
+var host = window.location.host;
 var length = window.location.pathname;
-var ws = new WebSocket("ws://192.168.44.144:8888/websocket" + length);
+var ws = new WebSocket("ws://" + host + "/websocket" + length);
 
 ws.onmessage = function(event){
 

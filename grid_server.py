@@ -10,7 +10,7 @@ import os
 
 class Grid(object):
     """
-    Keeps track of each grid's state and it's websocket connections.
+    Keeps track of each grid's state and its websocket connections.
     """
 
     def __init__(self, side):
