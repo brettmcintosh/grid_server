@@ -1,72 +1,72 @@
-var grid = document.getElementById('grid');
-var touchMoving = false;
+(function(){
+    gridServer.touchMoving = false;
 
-grid.addEventListener('dragstart', drag);
-grid.addEventListener('dragover', dragOver);
-grid.addEventListener('drop', drop);
-grid.addEventListener('dragend', dragEnd);
+    gridServer.drag = function(event){
 
-grid.addEventListener('touchmove', touchMove);
-grid.addEventListener('touchend', touchEnd);
+        event.dataTransfer.setData("text/plain", event.target.textContent);
+        event.dataTransfer.dropEffect = "move";
+    };
 
-function drag(event){
+    gridServer.dragOver = function(event){
 
-    event.dataTransfer.setData("text/plain", event.target.textContent);
-    event.dataTransfer.dropEffect = "move";
-}
+        if (event.target.textContent !== 'x'){
+            event.preventDefault();
+        }
+    };
 
-function dragOver(event){
+    gridServer.drop = function(event){
 
-    if (event.target.textContent !== 'x'){
+        var data = event.dataTransfer.getData("text/plain");
+
+        event.target.textContent = data;
+        gridServer.sendUpdate(event.target.id, data);
+    };
+
+    gridServer.dragEnd = function(event){
+
+        if (event.dataTransfer.dropEffect === "move"){
+            event.target.textContent = '';
+            gridServer.sendUpdate(event.target.id, '');
+        }
+    };
+
+    gridServer.sendUpdate = function(id, data){
+
+        var update = {};
+
+        update[id] = data;
+        gridServer.ws.send(JSON.stringify(update));
+    };
+
+    gridServer.touchMove = function(event){
+
+        var sourceValue = event.target.textContent;
+
+        if (sourceValue === 'x'){
+            gridServer.touchMoving = true;
+        }
+
         event.preventDefault();
+    };
+
+    gridServer.touchEnd = function(event){
+        var destinationX = event.changedTouches[0].pageX;
+        var destinationY = event.changedTouches[0].pageY;
+        var destination = document.elementFromPoint(destinationX, destinationY);
+
+        if (gridServer.touchMoving && destination.textContent !== 'x' && destination.nodeName === 'TD'){
+            gridServer.touchMoving = false;
+            destination.textContent = 'x';
+            event.target.textContent = '';
+            gridServer.sendUpdate(destination.id, 'x');
+            gridServer.sendUpdate(event.target.id, '');
+        }
     }
-}
+})();
 
-function drop(event){
-
-    var data = event.dataTransfer.getData("text/plain");
-
-    event.target.textContent = data;
-    sendUpdate(event.target.id, data);
-}
-
-function dragEnd(event){
-
-    if (event.dataTransfer.dropEffect === "move"){
-        event.target.textContent = '';
-        sendUpdate(event.target.id, '');
-    }
-}
-
-function sendUpdate(id, data){
-
-    var update = {};
-
-    update[id] = data;
-    ws.send(JSON.stringify(update));
-}
-
-function touchMove(event){
-
-    var sourceValue = event.target.textContent;
-
-    if (sourceValue === 'x'){
-        touchMoving = true;
-    }
-
-    event.preventDefault();
-}
-
-function touchEnd(event){
-    var destinationX = event.changedTouches[0].pageX;
-    var destinationY = event.changedTouches[0].pageY;
-    var destination = document.elementFromPoint(destinationX, destinationY);
-
-    if (touchMoving && destination.textContent !== 'x' && destination.nodeName === 'TD'){
-        touchMoving = false;
-        destination.textContent = 'x';
-        event.target.textContent = '';
-        sendUpdate(destination.id, 'x');
-        sendUpdate(event.target.id, '');
-    }
-}
+gridServer.grid.addEventListener('dragstart', gridServer.drag);
+gridServer.grid.addEventListener('dragover', gridServer.dragOver);
+gridServer.grid.addEventListener('drop', gridServer.drop);
+gridServer.grid.addEventListener('dragend', gridServer.dragEnd);
+gridServer.grid.addEventListener('touchmove', gridServer.touchMove);
+gridServer.grid.addEventListener('touchend', gridServer.touchEnd);
