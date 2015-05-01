@@ -15,11 +15,11 @@ gridServer.dragOver = function(event){
 
 gridServer.drop = function(event){
 
-    var data = event.dataTransfer.getData("text/plain");
+        var data = event.dataTransfer.getData("text/plain");
 
-    event.target.textContent = data;
-    gridServer.sendUpdate(event.target.id, data);
-};
+        event.target.textContent = data;
+        gridServer.sendUpdate(event.target.id, data);
+    };
 
 gridServer.dragEnd = function(event){
 
@@ -60,7 +60,7 @@ gridServer.touchEnd = function(event){
         gridServer.sendUpdate(destination.id, 'x');
         gridServer.sendUpdate(event.target.id, '');
     }
-}
+};
 
 gridServer.grid.addEventListener('dragstart', gridServer.drag);
 gridServer.grid.addEventListener('dragover', gridServer.dragOver);
