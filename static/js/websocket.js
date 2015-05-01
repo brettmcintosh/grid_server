@@ -1,25 +1,18 @@
-var host = window.location.host;
-var length = window.location.pathname;
-var ws = new WebSocket("ws://" + host + "/websocket" + length);
+window.gridServer = {};
 
-ws.onmessage = function(event){
+(function() {
+    var host = window.location.host;
+    var length = window.location.pathname;
+    gridServer.ws = new WebSocket("ws://" + host + "/websocket" + length);
 
-    var data = JSON.parse(event.data)
+    gridServer.ws.onmessage = function (event) {
 
-    for (var key in data){
-        if (data.hasOwnProperty(key)){
-            document.getElementById(key).textContent = data[key];
+        var data = JSON.parse(event.data);
+
+        for (var key in data) {
+            if (data.hasOwnProperty(key)) {
+                document.getElementById(key).textContent = data[key];
+            }
         }
-    }
-};
-
-function xToggle(e){
-
-    var cell = e.target;
-
-    if (cell.innerHTML === '') {
-        cell.innerHTML = 'x';
-    }else{
-        cell.innerHTML = '';
-    }
-}
+    };
+})();

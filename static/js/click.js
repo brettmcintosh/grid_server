@@ -1,12 +1,22 @@
-var grid = document.getElementById('grid');
+gridServer.grid = document.getElementById('grid');
 
-grid.addEventListener('click', function(e){
+gridServer.xToggle = function(e) {
+
+    var cell = e.target;
+
+    if (cell.innerHTML === '') {
+        cell.innerHTML = 'x';
+    } else {
+        cell.innerHTML = '';
+    }
+};
+
+gridServer.grid.addEventListener('click', function(e){
 
     if (e.target && e.target.nodeName === 'TD'){
-        xToggle(e);
+        gridServer.xToggle(e);
         var gridState = {};
         gridState[e.target.id] = e.target.textContent;
-        ws.send(JSON.stringify(gridState));
+        gridServer.ws.send(JSON.stringify(gridState));
     }
 });
-
