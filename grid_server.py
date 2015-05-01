@@ -18,6 +18,14 @@ class Grid(object):
         self.state = {}
         self.socket_connections = set()
 
+    def update(self, key, value):
+        # add change to grid's state
+        if value == '':
+            # remove item from state dict if square is empty
+            del self.state[key]
+        else:
+            self.state[key] = value
+
 
 class GridManager(object):
     """
@@ -65,12 +73,15 @@ class GridSocket(WebSocketHandler):
         """Whenever a grid state is received, broadcast the new state to all of the grid's active connections."""
         data = json.loads(message)
 
+        # update grid's state
         for key, value in data.items():
-            self.grid.state[key] = value
+            self.grid.update(key, value)
 
         for connection in copy(self.grid.socket_connections):
             if connection.ws_connection:
-                connection.write_message(self.grid.state)
+                # only update other connections
+                if connection is not self:
+                    connection.write_message(message)
             else:
                 self.grid.socket_connections.remove(connection)
 
