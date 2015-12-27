@@ -5,5 +5,3 @@
 4. Grid changes are synced in real time across all other clients accessing the same URL.  
 5. Must work on mobile with touch screens.
 6. No third party javascript libraries.
-
-See the result at http://54.201.235.137/6
